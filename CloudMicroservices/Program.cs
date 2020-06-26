@@ -25,6 +25,11 @@ namespace CloudMicroServices
                 await Task.Delay(TimeSpan.FromSeconds(1));
 
                 var query = new Query1(new string('a', random.Next(1, 5)));
+
+                var serializer = new ChannelDataSerializer();
+                var (meta, data) = serializer.Serialize(query);
+                var querySecond = (Query1)serializer.Deserialize(meta, data);
+
                 var correlationId = (ulong)random.Next();
                 var outputChannel = peripheryChannels.Output.AddOrUpdate(
                     correlationId,
