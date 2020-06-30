@@ -1,13 +1,10 @@
-﻿namespace CloudMicroServices
+﻿using BTDB.Buffer;
+
+namespace CloudMicroServices
 {
     public class PeripheryChannelMessage
     {
-        public ulong CorrelationId { get; set; }
-        public IQuery Query { get; set; }
-
-        public override string ToString()
-        {
-            return $"ID {CorrelationId} Data {Query.Data}";
-        }
+        public ByteBuffer Data { get; set; }
+        public ByteBuffer MetaData { get; set; }
     }
 }

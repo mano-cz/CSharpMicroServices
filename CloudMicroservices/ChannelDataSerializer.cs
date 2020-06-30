@@ -6,7 +6,7 @@ namespace CloudMicroServices
     public class ChannelDataSerializer
     {
         readonly EventSerializer _eventSerializer = new EventSerializer();
-        EventDeserializer _eventDeserializer = new EventDeserializer();
+        readonly EventDeserializer _eventDeserializer = new EventDeserializer();
 
         public (ByteBuffer metaData, ByteBuffer data) Serialize(object obj)
         {

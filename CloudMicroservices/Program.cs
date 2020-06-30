@@ -19,33 +19,29 @@ namespace CloudMicroServices
                 Name = nameof(periphery)
             };
             peripheryThread.Start();
+            var serializer = new ChannelDataSerializer();
 
             while (true)
             {
                 await Task.Delay(TimeSpan.FromSeconds(1));
-
                 var query = new Query1(new string('a', random.Next(1, 5)));
-
-                var serializer = new ChannelDataSerializer();
-                var (meta, data) = serializer.Serialize(query);
-                var querySecond = (Query1)serializer.Deserialize(meta, data);
-
                 var correlationId = (ulong)random.Next();
                 var outputChannel = peripheryChannels.Output.AddOrUpdate(
                     correlationId,
-                    key => Channel.CreateBounded<IResponse>(1),
-                    (key, channel) => Channel.CreateBounded<IResponse>(1));
-                await peripheryChannels.Input.Writer.WriteAsync(new PeripheryChannelMessage
+                    key => Channel.CreateBounded<PeripheryChannelMessage>(1),
+                    (key, channel) => Channel.CreateBounded<PeripheryChannelMessage>(1));
+                var (meta, data) = serializer.Serialize(query);
+                await peripheryChannels.Input.Writer.WriteAsync(new PeripheryInputChannelMessage
                 {
                     CorrelationId = correlationId,
-                    Query = query
+                    Data = data,
+                    MetaData = meta
                 });
-                var response = await outputChannel.Reader.ReadAsync();
-
+                var responseMessage = await outputChannel.Reader.ReadAsync();
+                var response = (Response1)serializer.Deserialize(responseMessage.MetaData, responseMessage.Data);
                 peripheryChannels.Output.Remove(correlationId, out outputChannel);
                 // outputChannel.Writer.Complete();
-
-                Console.WriteLine($"Received response to query {query} with data {response}");
+                Console.WriteLine($"Received response to query {query.Data} with data {response.Data}");
             }
         }
     }
