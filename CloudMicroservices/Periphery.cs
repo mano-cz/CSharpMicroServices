@@ -16,13 +16,12 @@ namespace CloudMicroServices
             var peripherySerializer = new ChannelDataSerializer();
             while (true)
             {
-                var t = _peripheryChannels.Input.Reader.ReadAsync();
-                var nextMessage = t.AsTask().Result;
+                var nextMessage = _peripheryChannels.Input.Reader.ReadAsync().AsTask().Result;
                 var nextQuery = (Query1)peripherySerializer.Deserialize(nextMessage.MetaData, nextMessage.Data);
                 Console.WriteLine($"Received next message: {nextQuery.Data}");
                 if (!_peripheryChannels.Output.TryGetValue(nextMessage.CorrelationId, out var outputChannel))
                     throw new InvalidOperationException();
-                var response = new Response1 { Data = nextQuery.Data + "X" };
+                var response = new Response1 { Data = $"{nextQuery.Data}Response" };
                 var (meta, data) = peripherySerializer.Serialize(response);
                 outputChannel.Writer.WriteAsync(
                     new PeripheryChannelMessage
