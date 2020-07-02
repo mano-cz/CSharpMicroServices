@@ -28,7 +28,7 @@ namespace CloudMicroServices
                 {
                     CorrelationId = correlationId,
                     Data = data,
-                    MetaData = meta
+                    MetaData = meta // maybe...could be separate, because often empty
                 });
                 var responseMessage = await outputChannel.Reader.ReadAsync();
                 var response = (Response1)coreSerializer.Deserialize(responseMessage.MetaData, responseMessage.Data);
