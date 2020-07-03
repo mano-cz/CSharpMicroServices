@@ -6,6 +6,6 @@ namespace CloudMicroServices
     public class PeripheryChannels// : IProducerConsumerCollection<byte[]>
     {
         public Channel<PeripheryInputChannelMessage> Input { get; } = Channel.CreateUnbounded<PeripheryInputChannelMessage>();
-        public ConcurrentDictionary<ulong, Channel<PeripheryChannelMessage>> Output { get; } = new ConcurrentDictionary<ulong, Channel<PeripheryChannelMessage>>();
+        public ConcurrentDictionary<uint, Channel<PeripheryChannelMessage>> Output { get; } = new ConcurrentDictionary<uint, Channel<PeripheryChannelMessage>>();
     }
 }

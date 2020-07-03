@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using BTDB.Service;
 
 namespace CloudMicroServices
 {
@@ -14,11 +15,12 @@ namespace CloudMicroServices
             StartupPeripheryThread(peripheryChannels);
             var coreSerializer = new ChannelDataSerializer();
             var random = new Random();
+            var numberAllocator = new NumberAllocator(default);
             while (true)
             {
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 var query = new Query1(new string('a', random.Next(1, 5)));
-                var correlationId = (ulong)random.Next();
+                var correlationId = numberAllocator.Allocate();
                 var outputChannel = peripheryChannels.Output.AddOrUpdate(
                     correlationId,
                     key => Channel.CreateBounded<PeripheryChannelMessage>(1),
@@ -33,6 +35,7 @@ namespace CloudMicroServices
                 var responseMessage = await outputChannel.Reader.ReadAsync();
                 var response = (Response1)coreSerializer.Deserialize(responseMessage.MetaData, responseMessage.Data);
                 peripheryChannels.Output.Remove(correlationId, out outputChannel);
+                numberAllocator.Deallocate(correlationId);
                 Console.WriteLine($"Received response to query {query.Data} with data {response.Data}");
             }
         }
