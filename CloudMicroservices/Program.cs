@@ -23,8 +23,8 @@ namespace CloudMicroServices
                 var correlationId = numberAllocator.Allocate();
                 var outputChannel = peripheryChannels.Output.AddOrUpdate(
                     correlationId,
-                    key => Channel.CreateBounded<PeripheryChannelMessage>(1),
-                    (key, channel) => Channel.CreateBounded<PeripheryChannelMessage>(1));
+                    key => PeripheryChannels.CreateBoundedOutputChannel(),
+                    (key, channel) => PeripheryChannels.CreateBoundedOutputChannel());
                 var (meta, data) = coreSerializer.Serialize(query);
                 await peripheryChannels.Input.Writer.WriteAsync(new PeripheryInputChannelMessage
                 {
