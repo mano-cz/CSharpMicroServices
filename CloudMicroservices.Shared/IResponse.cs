@@ -1,4 +1,4 @@
-﻿namespace CloudMicroServices
+﻿namespace CloudMicroservices.Shared
 {
     public interface IResponse
     {

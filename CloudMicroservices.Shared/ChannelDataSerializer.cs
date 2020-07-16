@@ -2,7 +2,7 @@
 using BTDB.Buffer;
 using BTDB.EventStore2Layer;
 
-namespace CloudMicroServices
+namespace CloudMicroservices.Shared
 {
     public class ChannelDataSerializer
     {

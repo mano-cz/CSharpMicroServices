@@ -1,4 +1,5 @@
 ﻿using System;
+using CloudMicroservices.Shared;
 
 namespace CloudMicroServices
 {

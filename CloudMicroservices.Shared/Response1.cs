@@ -1,4 +1,4 @@
-﻿namespace CloudMicroServices
+﻿namespace CloudMicroservices.Shared
 {
     public class Response1 : IResponse
     {

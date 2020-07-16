@@ -1,4 +1,6 @@
-﻿namespace CloudMicroServices
+﻿using CloudMicroservices.Shared;
+
+namespace CloudMicroServices
 {
     public class PeripheryInputChannelMessage : PeripheryChannelMessage
     {

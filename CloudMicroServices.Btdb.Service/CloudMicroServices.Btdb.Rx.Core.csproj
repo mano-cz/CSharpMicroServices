@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CloudMicroservices.Shared\CloudMicroservices.Shared.csproj" />
+    <ProjectReference Include="..\CloudMicroServices.Btdb.Rx.Periphery\CloudMicroServices.Btdb.Rx.Periphery.csproj" />
   </ItemGroup>
 
 </Project>

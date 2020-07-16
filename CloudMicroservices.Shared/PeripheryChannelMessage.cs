@@ -1,6 +1,6 @@
 ﻿using BTDB.Buffer;
 
-namespace CloudMicroServices
+namespace CloudMicroservices.Shared
 {
     public class PeripheryChannelMessage
     {

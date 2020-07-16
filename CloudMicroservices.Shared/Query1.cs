@@ -1,4 +1,4 @@
-﻿namespace CloudMicroServices
+﻿namespace CloudMicroservices.Shared
 {
     public class Query1 : IQuery
     {
