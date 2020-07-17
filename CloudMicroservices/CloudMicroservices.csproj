@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="BTDB" Version="24.0.2" />
   </ItemGroup>
 
