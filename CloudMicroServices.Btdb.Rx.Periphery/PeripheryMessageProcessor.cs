@@ -13,18 +13,18 @@ namespace CloudMicroServices.Btdb.Rx.Periphery
             _serializer = serializer;
         }
 
-        public PeripheryChannelMessage Process(PeripheryChannelMessage message)
-        {
-            var nextQuery = (Query1)_serializer.Deserialize(message.MetaData, message.Data);
-            // Console.WriteLine($"Received next message: {nextQuery.Data}");
-            var response = new Response1 { Data = $"{nextQuery.Data}Response" };
-            var (meta, data) = _serializer.Serialize(response);
-            // Thread.Sleep(100);
-            return new PeripheryChannelMessage
-            {
-                Data = data,
-                MetaData = meta
-            };
-        }
+        // public ChannelMessage Process(ChannelMessage message)
+        // {
+        //     var nextQuery = (Query1)_serializer.Deserialize(message.MetaData, message.Data);
+        //     // Console.WriteLine($"Received next message: {nextQuery.Data}");
+        //     var response = new Response1 { Data = $"{nextQuery.Data}Response" };
+        //     var (meta, data) = _serializer.Serialize(response);
+        //     // Thread.Sleep(100);
+        //     return new ChannelMessage
+        //     {
+        //         Data = data,
+        //         MetaData = meta
+        //     };
+        // }
     }
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Data\SourceCodes\CSharpMicroServices" t="IncludeFlat">
+      <e p="CloudMicroservices" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CloudMicroservices.csproj" t="IncludeRecursive" />
+        <e p="InputChannelMessage.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="CloudMicroservices.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Periphery.cs" t="Include" />
+        <e p="PeripheryChannels.cs" t="Include" />
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="CloudMicroServices.Btdb.Rx.Periphery" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CloudMicroServices.Btdb.Rx.Periphery.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="CloudMicroServices.Btdb.Rx.Periphery.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Periphery.cs" t="Include" />
+        <e p="PeripheryMessageProcessor.cs" t="Include" />
+      </e>
+      <e p="CloudMicroServices.Btdb.Service" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CloudMicroServices.Btdb.Rx.Core.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="CloudMicroServices.Btdb.Rx.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="CloudMicroservices.Shared" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ChannelDataSerializer.cs" t="Include" />
+        <e p="ChannelMessage.cs" t="Include" />
+        <e p="CloudMicroservices.Shared.csproj" t="IncludeRecursive" />
+        <e p="IQuery.cs" t="Include" />
+        <e p="IResponse.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="CloudMicroservices.Shared.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Query1.cs" t="Include" />
+        <e p="Response1.cs" t="Include" />
+      </e>
+      <e p="CloudMicroservices.sln" t="IncludeFlat" />
+      <e p="CloudMicroservices.Test" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CloudMicroservices.Test.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="CloudMicroservices.Test.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="ParallelTest.cs" t="Include" />
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.49\lib\native\amd64" t="Include">
+      <e p="KernelTraceControl.dll" t="Include" />
+      <e p="msdia140.dll" t="Include" />
+    </e>
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.49\lib\native\x86" t="Include">
+      <e p="KernelTraceControl.dll" t="Include" />
+      <e p="KernelTraceControl.Win61.dll" t="Include" />
+      <e p="msdia140.dll" t="Include" />
+    </e>
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.49\lib\netstandard1.6\Dia2Lib.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.49\lib\netstandard1.6\OSExtensions.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.49\lib\netstandard1.6\TraceReloggerLib.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.net.test.sdk\16.6.1\build\netcoreapp2.1" t="Include">
+      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
+    </e>
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.testplatform.testhost\16.6.1\build\netcoreapp2.1\x64\testhost.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\microsoft.testplatform.testhost\16.6.1\build\netcoreapp2.1\x64\testhost.exe" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\nunit3testadapter\3.17.0\build\netcoreapp2.1\nunit.engine.api.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\nunit3testadapter\3.17.0\build\netcoreapp2.1\nunit.engine.core.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\nunit3testadapter\3.17.0\build\netcoreapp2.1\nunit.engine.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\nunit3testadapter\3.17.0\build\netcoreapp2.1\NUnit3.TestAdapter.dll" t="Include" />
+    <e p="C:\Users\m.novak\.nuget\packages\nunit3testadapter\3.17.0\build\netcoreapp2.1\NUnit3.TestAdapter.pdb" t="Include" />
+    <e p="C:\Users\m.novak\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\m.novak\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_CloudMicroservices.-2061130394.00" t="ExcludeRecursive" />
+  </component>
+</project>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8c269e87-fb2e-460a-bde9-b53741f77d5b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/CloudMicroServices.Btdb.Rx.Periphery/PeripheryMessageProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroServices.Btdb.Rx.Periphery/PeripheryMessageProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroServices.Btdb.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroServices.Btdb.Service/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices.Shared/ChannelDataSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroservices.Shared/ChannelDataSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices.Shared/PeripheryChannelMessage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices.sln" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroservices.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices/Periphery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroservices/Periphery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices/PeripheryChannels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroservices/PeripheryChannels.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices/PeripheryInputChannelMessage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CloudMicroservices/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CloudMicroservices/Program.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/CloudMicroservices.Test/ParallelTest.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/CloudMicroservices.Test/ParallelTest.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ex64eA4X260MWuj6bbG41lyqmE" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="RunManager" selected=".NET Project.CloudMicroservices">
+    <configuration name="CloudMicroServices.Btdb.Rx.Core" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/CloudMicroServices.Btdb.Service/CloudMicroServices.Btdb.Rx.Core.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="CloudMicroservices" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/CloudMicroservices/CloudMicroservices.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>

@@ -2,7 +2,7 @@
 
 namespace CloudMicroServices
 {
-    public class PeripheryInputChannelMessage : PeripheryChannelMessage
+    public class InputChannelMessage : ChannelMessage
     {
         public uint CorrelationId { get; set; }
 

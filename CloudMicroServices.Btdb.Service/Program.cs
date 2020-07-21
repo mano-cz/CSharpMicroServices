@@ -27,53 +27,53 @@ namespace CloudMicroServices.Btdb.Rx.Core
             [Benchmark]
             public void SeriesTest()
             {
-                var pipedTwoChannels = new PipedTwoChannels();
-                var coreSerializer = new ChannelDataSerializer();
-                var coreService = new Service(pipedTwoChannels.First);
-                var periphery = new Periphery.Periphery(pipedTwoChannels.Second);
-                var random = new Random();
-                var peripheryMessageProcessor = coreService.QueryRemoteService<Func<PeripheryChannelMessage, PeripheryChannelMessage>>();
-                for (int i = 0; i < _testQueryCount; i++)
-                {
-                    var query = new Query1(new string('a', random.Next(1, 5)));
-                    ByteBuffer data, meta;
-                    PeripheryChannelMessage result;
-                    (meta, data) = coreSerializer.Serialize(query);
-                    result = peripheryMessageProcessor(new PeripheryChannelMessage
-                    {
-                        Data = data,
-                        MetaData = meta
-                    });
-                    var response = (Response1)coreSerializer.Deserialize(result.MetaData, result.Data);
-                }
+                // var pipedTwoChannels = new PipedTwoChannels();
+                // var coreSerializer = new ChannelDataSerializer();
+                // var coreService = new Service(pipedTwoChannels.First);
+                // var periphery = new Periphery.Periphery(pipedTwoChannels.Second);
+                // var random = new Random();
+                // var peripheryMessageProcessor = coreService.QueryRemoteService<Func<ChannelMessage, ChannelMessage>>();
+                // for (int i = 0; i < _testQueryCount; i++)
+                // {
+                //     var query = new Query1(new string('a', random.Next(1, 5)));
+                //     ByteBuffer data, meta;
+                //     ChannelMessage result;
+                //     (meta, data) = coreSerializer.Serialize(query);
+                //     result = peripheryMessageProcessor(new ChannelMessage
+                //     {
+                //         Data = data,
+                //         MetaData = meta
+                //     });
+                //     var response = (Response1)coreSerializer.Deserialize(result.MetaData, result.Data);
+                // }
             }
 
             [Benchmark]
             public void ParallelTest()
             {
-                var pipedTwoChannels = new PipedTwoChannels();
-                var coreSerializer = new ChannelDataSerializer();
-                var coreService = new Service(pipedTwoChannels.First);
-                var periphery = new Periphery.Periphery(pipedTwoChannels.Second);
-                var random = new Random();
-                var serializerLock = new object();
-                var peripheryMessageProcessor = coreService.QueryRemoteService<Func<PeripheryChannelMessage, PeripheryChannelMessage>>();
-                var forResult = Parallel.For(0, _testQueryCount, (i, state) =>
-                {
-                    var query = new Query1(new string('a', random.Next(1, 5)));
-                    ByteBuffer data, meta;
-                    PeripheryChannelMessage result = null;
-                    lock (serializerLock)
-                    {
-                        (meta, data) = coreSerializer.Serialize(query);
-                        result = peripheryMessageProcessor(new PeripheryChannelMessage
-                        {
-                            Data = data,
-                            MetaData = meta
-                        });
-                        var response = (Response1)coreSerializer.Deserialize(result.MetaData, result.Data);
-                    }
-                });
+                // var pipedTwoChannels = new PipedTwoChannels();
+                // var coreSerializer = new ChannelDataSerializer();
+                // var coreService = new Service(pipedTwoChannels.First);
+                // var periphery = new Periphery.Periphery(pipedTwoChannels.Second);
+                // var random = new Random();
+                // var serializerLock = new object();
+                // var peripheryMessageProcessor = coreService.QueryRemoteService<Func<ChannelMessage, ChannelMessage>>();
+                // var forResult = Parallel.For(0, _testQueryCount, (i, state) =>
+                // {
+                //     var query = new Query1(new string('a', random.Next(1, 5)));
+                //     ByteBuffer data, meta;
+                //     ChannelMessage result = null;
+                //     lock (serializerLock)
+                //     {
+                //         (meta, data) = coreSerializer.Serialize(query);
+                //         result = peripheryMessageProcessor(new ChannelMessage
+                //         {
+                //             Data = data,
+                //             MetaData = meta
+                //         });
+                //         var response = (Response1)coreSerializer.Deserialize(result.MetaData, result.Data);
+                //     }
+                // });
             }
         }
     }
