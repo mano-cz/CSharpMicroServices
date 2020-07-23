@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CloudMicroServices.Btdb.Service\CloudMicroServices.Btdb.Rx.Core.csproj" />
     <ProjectReference Include="..\CloudMicroservices\CloudMicroservices.csproj" />
   </ItemGroup>
 

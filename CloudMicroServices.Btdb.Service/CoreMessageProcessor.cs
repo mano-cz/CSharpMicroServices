@@ -3,14 +3,26 @@ using BTDB.Buffer;
 using BTDB.EventStore2Layer;
 using CloudMicroservices.Shared;
 
-namespace CloudMicroServices.Btdb.Rx.Periphery
+namespace CloudMicroServices.Btdb.Rx.Core
 {
-    public class PeripheryMessageProcessor : IMessageProcessor
+    public class CoreMessageProcessor : IMessageProcessor
     {
-        // readonly Func<IMessageProcessor> _coreMessageProcessorFactory;
+        // readonly Func<IMessageProcessor> _peripheryServiceFactory;
         readonly EventSerializer _eventSerializer = new EventSerializer();
         readonly EventDeserializer _eventDeserializer = new EventDeserializer();
         readonly object _serializationLock = new object();
+
+        // IMessageProcessor _peripheryService;
+        // IMessageProcessor PeripheryService
+        // {
+        //     get
+        //     {
+        //         lock (_serializationLock) // should be able to delete?
+        //         {
+        //             return _peripheryService ??= _peripheryServiceFactory();
+        //         }
+        //     }
+        // }
 
         IMessageProcessor _other;
         public IMessageProcessor Other
@@ -23,23 +35,19 @@ namespace CloudMicroServices.Btdb.Rx.Periphery
             }
         }
 
-        // public PeripheryMessageProcessor(Func<IMessageProcessor> coreMessageProcessorFactory)
+        // public CoreMessageProcessor(Func<IMessageProcessor> peripheryServiceFactory)
         // {
-        // _coreMessageProcessorFactory = coreMessageProcessorFactory;
+        //     _peripheryServiceFactory = peripheryServiceFactory;
         // }
 
-        // something like ensure initialized ... before each call maybe
+        public void Initialize(IMessageProcessor other)
+        {
+            _other = other ?? throw new ArgumentNullException(nameof(other));
+        }
+
         public byte[] ProcessData(byte[] data)
         {
-            var nextQuery = (Query1)Deserialize(data);
-            var response = new Response1 { Data = $"{nextQuery.Data}Response" };
-            lock (_serializationLock)
-            {
-                var (meta, data2) = Serialize(response);
-                if (meta != default)
-                    Other.ProcessMetadata(meta);
-                return data2;
-            }
+            throw new NotImplementedException();
         }
 
         public void ProcessMetadata(byte[] metadata)
@@ -60,13 +68,7 @@ namespace CloudMicroServices.Btdb.Rx.Periphery
             if (!result)
                 throw new InvalidOperationException();
             return obj;
-            // return default;
             // }
-        }
-
-        public void Initialize(IMessageProcessor other)
-        {
-            _other = other ?? throw new ArgumentNullException(nameof(other));
         }
 
         public (byte[] metaData, byte[] data) Serialize(object obj)
