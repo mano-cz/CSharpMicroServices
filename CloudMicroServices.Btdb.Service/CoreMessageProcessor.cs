@@ -7,22 +7,9 @@ namespace CloudMicroServices.Btdb.Rx.Core
 {
     public class CoreMessageProcessor : IMessageProcessor
     {
-        // readonly Func<IMessageProcessor> _peripheryServiceFactory;
         readonly EventSerializer _eventSerializer = new EventSerializer();
         readonly EventDeserializer _eventDeserializer = new EventDeserializer();
         readonly object _serializationLock = new object();
-
-        // IMessageProcessor _peripheryService;
-        // IMessageProcessor PeripheryService
-        // {
-        //     get
-        //     {
-        //         lock (_serializationLock) // should be able to delete?
-        //         {
-        //             return _peripheryService ??= _peripheryServiceFactory();
-        //         }
-        //     }
-        // }
 
         IMessageProcessor _other;
         public IMessageProcessor Other
@@ -35,14 +22,31 @@ namespace CloudMicroServices.Btdb.Rx.Core
             }
         }
 
-        // public CoreMessageProcessor(Func<IMessageProcessor> peripheryServiceFactory)
-        // {
-        //     _peripheryServiceFactory = peripheryServiceFactory;
-        // }
-
         public void Initialize(IMessageProcessor other)
         {
             _other = other ?? throw new ArgumentNullException(nameof(other));
+        }
+
+        public Response1 ProcessQuery(Query1 query, long i)
+        {
+            Console.WriteLine($"{i} QUERY: {query.Data}");
+            byte[] data, meta;
+            lock (_serializationLock)
+            {
+                Console.WriteLine($"{i} Start serialization");
+                (meta, data) = Serialize(query);
+                if (meta != default)
+                {
+                    Console.WriteLine($"{i} Has new meta");
+                    Other.ProcessMetadata(meta);
+                }
+                Console.WriteLine($"{i} End serialization");
+            }
+            Console.WriteLine($"{i} Deserialization START");
+            var responseData = Other.ProcessData(data);
+            var response = (Response1)Deserialize(responseData);
+            Console.WriteLine($"{i} Deserialization END");
+            return response;
         }
 
         public byte[] ProcessData(byte[] data)
