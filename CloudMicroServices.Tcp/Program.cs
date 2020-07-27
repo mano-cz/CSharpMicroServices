@@ -13,15 +13,18 @@ namespace CloudMicroServices.Tcp
         static async Task Main(string[] args)
         {
             // periphery server
-            var listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            listenSocket.Bind(new IPEndPoint(IPAddress.Loopback, 8087));
-            Console.WriteLine("Listening on port 8087");
-            listenSocket.Listen(120); // 120 connections can be queued for acceptance, does not block
-            while (true)
-            {
-                var socket = await listenSocket.AcceptAsync();
-                _ = ProcessLinesAsync(socket);
-            }
+            var server = new PeripheryTcpServer(new PeripheryMessageProcessor());
+            await server.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087));
+
+            // var listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            // listenSocket.Bind(new IPEndPoint(IPAddress.Loopback, 8087));
+            // Console.WriteLine("Listening on port 8087");
+            // listenSocket.ListenAsync(120); // 120 connections can be queued for acceptance, does not block
+            // while (true)
+            // {
+            //     var socket = await listenSocket.AcceptAsync();
+            //     _ = ProcessLinesAsync(socket); // do not block on new connection
+            // }
         }
 
         static async Task ProcessLinesAsync(Socket socket)
@@ -40,7 +43,8 @@ namespace CloudMicroServices.Tcp
                 }
 
                 // Tell the PipeReader how much of the buffer has been consumed.
-                reader.AdvanceTo(buffer.Start, buffer.End);
+                // nutno volat i v prip. ze nenajdu ... dostanu priste to sami + more, jinak kdyz neco zkonzumuju tak pristi read vrati az navazujici
+                reader.AdvanceTo(buffer.Start, buffer.End);// (pozice pred kerou jsem vse zkonzumoval, pozice pred kterou jsem vse videl)
 
                 // Stop reading if there's no more data coming.
                 if (result.IsCompleted)
