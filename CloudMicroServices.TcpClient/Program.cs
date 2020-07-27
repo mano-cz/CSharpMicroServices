@@ -14,8 +14,17 @@ namespace CloudMicroServices.TcpClient
             var cancellationTokenSource = new CancellationTokenSource();
             var peripheryThread = new Thread(() =>
             {
-                var peripheryTcpServer = new PeripheryTcpServer(new PeripheryMessageProcessor());
-                peripheryTcpServer.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087)).Wait(cancellationTokenSource.Token);
+                try
+                {
+                    var peripheryTcpServer =
+                        new PeripheryTcpServer(new PeripheryMessageProcessor(), cancellationTokenSource.Token);
+                    peripheryTcpServer.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087))
+                        .Wait(cancellationTokenSource.Token);
+                }
+                catch (OperationCanceledException e)
+                {
+                    // canceled
+                }
             })
             {
                 IsBackground = true,

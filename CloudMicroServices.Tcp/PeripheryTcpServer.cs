@@ -3,6 +3,7 @@ using System.Buffers;
 using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CloudMicroServices.Tcp
@@ -10,11 +11,13 @@ namespace CloudMicroServices.Tcp
     public class PeripheryTcpServer
     {
         readonly PeripheryMessageProcessor _messageProcessor;
+        readonly CancellationToken _token;
         readonly Socket _listenSocket;
 
-        public PeripheryTcpServer(PeripheryMessageProcessor messageProcessor)
+        public PeripheryTcpServer(PeripheryMessageProcessor messageProcessor, CancellationToken token)
         {
             _messageProcessor = messageProcessor;
+            _token = token;
             _listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
         }
 
@@ -38,11 +41,11 @@ namespace CloudMicroServices.Tcp
             var writer = PipeWriter.Create(stream);
             while (true)
             {
-                var result = await reader.ReadAsync();
+                var result = await reader.ReadAsync(_token);
                 var buffer = result.Buffer;
                 var responseMessage = _messageProcessor.ProcessMessage(buffer.ToArray()); // maybe not to array + response
 
-                await writer.WriteAsync(responseMessage);
+                await writer.WriteAsync(responseMessage, _token);
                 // Tell the PipeReader how much of the buffer has been consumed.
                 reader.AdvanceTo(buffer.End);
             }

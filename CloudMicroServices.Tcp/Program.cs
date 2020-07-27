@@ -4,6 +4,7 @@ using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CloudMicroServices.Tcp
@@ -13,7 +14,7 @@ namespace CloudMicroServices.Tcp
         static async Task Main(string[] args)
         {
             // periphery server
-            var server = new PeripheryTcpServer(new PeripheryMessageProcessor());
+            var server = new PeripheryTcpServer(new PeripheryMessageProcessor(), new CancellationToken());
             await server.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087));
 
             // var listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
