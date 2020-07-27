@@ -25,8 +25,8 @@ namespace CloudMicroServices.TcpClient
 
             Parallel.For(1, 4, (i, state) =>
             {
+                // socket allocation per query, should be pool, locking etc.
                 var peripheryClient = new PeripheryTcpClient();
-                // await using var peripheryClient = new PeripheryTcpClient();
                 peripheryClient.Connect(new IPEndPoint(IPAddress.Loopback, 8087));
                 var response = peripheryClient.SendAsync(new byte[1] { (byte)i }).Result;
                 // var response = await peripheryClient.SendAsync(new byte[1] { (byte)i });
