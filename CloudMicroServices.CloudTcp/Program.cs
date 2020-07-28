@@ -53,7 +53,7 @@ namespace CloudMicroServices.CloudTcp
                 try
                 {
                     var peripheryTcpServer =
-                        new PeripheryTcpServer(new PeripheryPayloadProcessor(), cancellationTokenSource.Token);
+                        new PeripheryTcpServer(new PeripheryPayloadProcessor(new MessageProcessor(new MessageSerializer())), cancellationTokenSource.Token);
                     peripheryTcpServer.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087))
                         .Wait(cancellationTokenSource.Token);
                 }

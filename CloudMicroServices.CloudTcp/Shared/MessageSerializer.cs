@@ -34,5 +34,14 @@ namespace CloudMicroServices.CloudTcp.Shared
             return obj;
             // }
         }
+
+        public void ApplyMetadataToDeserializer(ReadOnlyMemory<byte> metadata)
+        {
+            var buffer = ByteBuffer.NewAsync(metadata);
+            lock (_eventDeserializer) // maybe lock not needed
+            {
+                _eventDeserializer.ProcessMetadataLog(buffer);
+            }
+        }
     }
 }
