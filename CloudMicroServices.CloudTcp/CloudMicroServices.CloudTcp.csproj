@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BTDB" Version="24.0.2" />
     <PackageReference Include="System.IO.Pipelines" Version="4.7.2" />
   </ItemGroup>
 

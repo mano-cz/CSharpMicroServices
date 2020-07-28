@@ -12,6 +12,24 @@ namespace CloudMicroServices.CloudTcp
         static void Main(string[] args)
         {
             var cancellationTokenSource = new CancellationTokenSource();
+            StartPeriphery(cancellationTokenSource);
+
+            Parallel.For(1, 2, (i, state) =>
+            {
+                // socket allocation per query, should be pool, locking etc.
+                var peripheryClient = new PeripheryTcpClient();
+                peripheryClient.Connect(new IPEndPoint(IPAddress.Loopback, 8087));
+                var response = peripheryClient.SendAsync(new byte[1] { (byte)i }).Result;
+                // var response = await peripheryClient.SendAsync(new byte[1] { (byte)i });
+                // Console.WriteLine($"Response Len {response.Length}");
+                Console.WriteLine($"Response {i}={response[0]}");
+                // await Task.Delay(1000);
+            });
+            cancellationTokenSource.Cancel();
+        }
+
+        static void StartPeriphery(CancellationTokenSource cancellationTokenSource)
+        {
             var peripheryThread = new Thread(() =>
             {
                 try
@@ -31,19 +49,6 @@ namespace CloudMicroServices.CloudTcp
                 Name = "Periphery"
             };
             peripheryThread.Start();
-
-            Parallel.For(1, 4, (i, state) =>
-            {
-                // socket allocation per query, should be pool, locking etc.
-                var peripheryClient = new PeripheryTcpClient();
-                peripheryClient.Connect(new IPEndPoint(IPAddress.Loopback, 8087));
-                var response = peripheryClient.SendAsync(new byte[1] { (byte)i }).Result;
-                // var response = await peripheryClient.SendAsync(new byte[1] { (byte)i });
-                // Console.WriteLine($"Response Len {response.Length}");
-                Console.WriteLine($"Response {i}={response[0]}");
-                // await Task.Delay(1000);
-            });
-            cancellationTokenSource.Cancel();
         }
     }
 }
