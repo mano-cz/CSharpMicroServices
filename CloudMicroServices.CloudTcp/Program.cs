@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudMicroServices.CloudTcp.Core;
 using CloudMicroServices.CloudTcp.Periphery;
+using CloudMicroServices.CloudTcp.Shared;
 
 namespace CloudMicroServices.CloudTcp
 {
@@ -13,19 +14,36 @@ namespace CloudMicroServices.CloudTcp
         {
             var cancellationTokenSource = new CancellationTokenSource();
             StartPeriphery(cancellationTokenSource);
-
+            var serializer = new MessageSerializer();
+            var serializationLock = new object();
             Parallel.For(1, 2, (i, state) =>
             {
                 // socket allocation per query, should be pool, locking etc.
                 var peripheryClient = new PeripheryTcpClient();
                 peripheryClient.Connect(new IPEndPoint(IPAddress.Loopback, 8087));
-                var response = peripheryClient.SendAsync(new byte[1] { (byte)i }).Result;
+                lock (serializationLock)
+                {
+                    var (meta, data) = serializer.Serialize(new Query1 { Data = "a" });
+                    if (meta != default)
+                    {
+                        var metaPayload = new PayloadBuilder()
+                            .SetMessageType(MessageType.Metadata)
+                            .SetMessageBuffer(meta)
+                            .Build();
+                        peripheryClient.SendWithoutResponseAsync(metaPayload).Wait(cancellationTokenSource.Token);
+                    }
+                }
+                // var response = peripheryClient.SendAsync(message).Result;
                 // var response = await peripheryClient.SendAsync(new byte[1] { (byte)i });
                 // Console.WriteLine($"Response Len {response.Length}");
-                Console.WriteLine($"Response {i}={response[0]}");
+                // Console.WriteLine($"Response {i}={response[0]}");
                 // await Task.Delay(1000);
             });
-            cancellationTokenSource.Cancel();
+            while (true) { }
+            // Task.Delay(1000).ContinueWith(t =>
+            // {
+            //     cancellationTokenSource.Cancel();
+            // });
         }
 
         static void StartPeriphery(CancellationTokenSource cancellationTokenSource)
@@ -35,13 +53,18 @@ namespace CloudMicroServices.CloudTcp
                 try
                 {
                     var peripheryTcpServer =
-                        new PeripheryTcpServer(new PeripheryMessageProcessor(), cancellationTokenSource.Token);
+                        new PeripheryTcpServer(new PeripheryPayloadProcessor(), cancellationTokenSource.Token);
                     peripheryTcpServer.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087))
                         .Wait(cancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException e)
                 {
                     // canceled
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw;
                 }
             })
             {

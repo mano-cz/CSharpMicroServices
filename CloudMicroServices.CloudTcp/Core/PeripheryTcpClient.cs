@@ -35,16 +35,21 @@ namespace CloudMicroServices.CloudTcp.Core
                 await _stream.DisposeAsync();
         }
 
-        public async ValueTask<byte[]> SendAsync(byte[] data)
+        public async ValueTask<byte[]> SendAsync(byte[] payload)
         {
             // todo read article for better impl.
-            await _writer.WriteAsync(data);
+            await _writer.WriteAsync(payload);
             var response = await _reader.ReadAsync();
             var buffer = response.Buffer;
             var responseBytes = buffer.ToArray(); // can be avoided, it can ready it via segmets foreach without allocation, this allocates
             // maybe loop if i don't have have full response
             _reader.AdvanceTo(buffer.End);
             return responseBytes;
+        }
+
+        public async Task SendWithoutResponseAsync(byte[] payload)
+        {
+            await _writer.WriteAsync(payload);
         }
     }
 }

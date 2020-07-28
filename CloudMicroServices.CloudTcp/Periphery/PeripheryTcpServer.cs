@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
@@ -10,13 +9,13 @@ namespace CloudMicroServices.CloudTcp.Periphery
 {
     public class PeripheryTcpServer
     {
-        readonly PeripheryMessageProcessor _messageProcessor;
+        readonly PeripheryPayloadProcessor _payloadProcessor;
         readonly CancellationToken _token;
         readonly Socket _listenSocket;
 
-        public PeripheryTcpServer(PeripheryMessageProcessor messageProcessor, CancellationToken token)
+        public PeripheryTcpServer(PeripheryPayloadProcessor payloadProcessor, CancellationToken token)
         {
-            _messageProcessor = messageProcessor;
+            _payloadProcessor = payloadProcessor;
             _token = token;
             _listenSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
         }
@@ -31,6 +30,7 @@ namespace CloudMicroServices.CloudTcp.Periphery
                 var socket = await _listenSocket.AcceptAsync();
                 _ = ProcessNewSocketAsync(socket);
             }
+            // ReSharper disable once FunctionNeverReturns
         }
 
         async Task ProcessNewSocketAsync(Socket socket)
@@ -43,12 +43,13 @@ namespace CloudMicroServices.CloudTcp.Periphery
             {
                 var result = await reader.ReadAsync(_token);
                 var buffer = result.Buffer;
-                var responseMessage = _messageProcessor.ProcessMessage(buffer.ToArray()); // maybe not to array + response
-
-                await writer.WriteAsync(responseMessage, _token);
+                var responsePayload = _payloadProcessor.ProcessPayload(buffer);
+                if (responsePayload != default)
+                    await writer.WriteAsync(responsePayload, _token);
                 // Tell the PipeReader how much of the buffer has been consumed.
-                reader.AdvanceTo(buffer.End);
+                reader.AdvanceTo(buffer.End); // all for now, but for more 
             }
+            // ReSharper disable once FunctionNeverReturns
         }
     }
 }
