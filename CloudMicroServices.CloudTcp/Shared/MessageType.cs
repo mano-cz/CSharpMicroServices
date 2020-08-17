@@ -3,6 +3,7 @@
     public enum MessageType
     {
         Metadata,
-        Query
+        Query,
+        Response
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using BTDB.Buffer;
+using CloudMicroServices.CloudTcp.Periphery;
 
 namespace CloudMicroServices.CloudTcp.Shared
 {
@@ -14,6 +16,19 @@ namespace CloudMicroServices.CloudTcp.Shared
         public void ProcessMetadata(ReadOnlyMemory<byte> metadata)
         {
             _messageSerializer.ApplyMetadataToDeserializer(metadata);
+        }
+
+        public (ByteBuffer Meta, ByteBuffer Data) ProcessQuery(ReadOnlyMemory<byte> queryBytes)
+        {
+            var query = (Query1)_messageSerializer.Deserialize(queryBytes);
+            var response = new Response1 { Data = $"{query.Data}Response" };
+            return _messageSerializer.Serialize(response);
+        }
+
+        public void ProcessResponse(ReadOnlyMemory<byte> responseBytes)
+        {
+            var response = (Response1)_messageSerializer.Deserialize(responseBytes);
+            Console.WriteLine($"Response processed `{response.Data}`.");
         }
     }
 }

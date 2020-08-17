@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Buffers;
-using BTDB.Buffer;
 using CloudMicroServices.CloudTcp.Shared;
 
-namespace CloudMicroServices.CloudTcp.Periphery
+namespace CloudMicroServices.CloudTcp.Core
 {
-    public class PeripheryPayloadProcessor
+    public class CorePayloadProcessor
     {
         readonly MessageProcessor _messageProcessor;
 
-        public PeripheryPayloadProcessor(MessageProcessor messageProcessor)
+        public CorePayloadProcessor(MessageProcessor messageProcessor)
         {
             _messageProcessor = messageProcessor;
         }
 
-        public (ByteBuffer Meta, ByteBuffer Data) ProcessPayload(ReadOnlySequence<byte> payloadSequence)
+        public bool ProcessPayload(ReadOnlySequence<byte> payloadSequence)
         {
             var payloadReader = new PayloadReader(payloadSequence);
             switch (payloadReader.MessageType)
             {
                 case MessageType.Metadata:
                     _messageProcessor.ProcessMetadata(payloadReader.MessageBody);
-                    break;
-                case MessageType.Query:
-                    return _messageProcessor.ProcessQuery(payloadReader.MessageBody);
+                    return false;
+                case MessageType.Response:
+                    _messageProcessor.ProcessResponse(payloadReader.MessageBody);
+                    return true;
                 default:
                     throw new InvalidOperationException($"Unsupported message type {payloadReader.MessageType}.");
             }
-            return default;
         }
     }
 }

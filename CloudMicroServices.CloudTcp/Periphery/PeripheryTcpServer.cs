@@ -4,6 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using BTDB.Buffer;
+using CloudMicroServices.CloudTcp.Shared;
 
 namespace CloudMicroServices.CloudTcp.Periphery
 {
@@ -43,13 +45,23 @@ namespace CloudMicroServices.CloudTcp.Periphery
             {
                 var result = await reader.ReadAsync(_token);
                 var buffer = result.Buffer;
-                var responsePayload = _payloadProcessor.ProcessPayload(buffer);
-                if (responsePayload != default)
-                    await writer.WriteAsync(responsePayload, _token);
+                var (meta, data) = _payloadProcessor.ProcessPayload(buffer);
+                if (meta != default)
+                    await writer.WriteAsync(CreateResponsePayload(MessageType.Metadata, meta), _token);
+                if (data != default)
+                    await writer.WriteAsync(CreateResponsePayload(MessageType.Response, data), _token);
                 // Tell the PipeReader how much of the buffer has been consumed.
                 reader.AdvanceTo(buffer.End); // all for now, but for more 
             }
             // ReSharper disable once FunctionNeverReturns
+        }
+
+        static byte[] CreateResponsePayload(MessageType messageType, ByteBuffer messageBody)
+        {
+            return new PayloadBuilder()
+                .SetMessageType(messageType)
+                .SetMessageBuffer(messageBody)
+                .Build();
         }
     }
 }

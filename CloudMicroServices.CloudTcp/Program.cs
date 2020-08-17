@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using BTDB.Buffer;
 using CloudMicroServices.CloudTcp.Core;
 using CloudMicroServices.CloudTcp.Periphery;
 using CloudMicroServices.CloudTcp.Shared;
@@ -19,11 +20,13 @@ namespace CloudMicroServices.CloudTcp
             Parallel.For(1, 2, (i, state) =>
             {
                 // socket allocation per query, should be pool, locking etc.
-                var peripheryClient = new PeripheryTcpClient();
+                var peripheryClient = new PeripheryTcpClient(new CorePayloadProcessor(new MessageProcessor(new MessageSerializer())));
                 peripheryClient.Connect(new IPEndPoint(IPAddress.Loopback, 8087));
+                ByteBuffer data;
                 lock (serializationLock)
                 {
-                    var (meta, data) = serializer.Serialize(new Query1 { Data = "a" });
+                    ByteBuffer meta;
+                    (meta, data) = serializer.Serialize(new Query1 { Data = "a" });
                     if (meta != default)
                     {
                         var metaPayload = new PayloadBuilder()
@@ -33,17 +36,13 @@ namespace CloudMicroServices.CloudTcp
                         peripheryClient.SendWithoutResponseAsync(metaPayload).Wait(cancellationTokenSource.Token);
                     }
                 }
-                // var response = peripheryClient.SendAsync(message).Result;
-                // var response = await peripheryClient.SendAsync(new byte[1] { (byte)i });
-                // Console.WriteLine($"Response Len {response.Length}");
-                // Console.WriteLine($"Response {i}={response[0]}");
-                // await Task.Delay(1000);
+                var dataPayload = new PayloadBuilder()
+                    .SetMessageType(MessageType.Query)
+                    .SetMessageBuffer(data)
+                    .Build();
+                peripheryClient.SendAsync(dataPayload).AsTask().Wait(cancellationTokenSource.Token);
             });
             while (true) { }
-            // Task.Delay(1000).ContinueWith(t =>
-            // {
-            //     cancellationTokenSource.Cancel();
-            // });
         }
 
         static void StartPeriphery(CancellationTokenSource cancellationTokenSource)

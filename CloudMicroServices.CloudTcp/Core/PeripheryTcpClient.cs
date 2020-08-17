@@ -9,13 +9,15 @@ namespace CloudMicroServices.CloudTcp.Core
 {
     public class PeripheryTcpClient : IAsyncDisposable
     {
+        readonly CorePayloadProcessor _corePayloadProcessor;
         readonly Socket _clientSocket;
         NetworkStream _stream;
         PipeReader _reader;
         PipeWriter _writer;
 
-        public PeripheryTcpClient()
+        public PeripheryTcpClient(CorePayloadProcessor corePayloadProcessor)
         {
+            _corePayloadProcessor = corePayloadProcessor;
             _clientSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
         }
 
@@ -35,16 +37,23 @@ namespace CloudMicroServices.CloudTcp.Core
                 await _stream.DisposeAsync();
         }
 
-        public async ValueTask<byte[]> SendAsync(byte[] payload)
+        public async ValueTask SendAsync(byte[] payload)
         {
             // todo read article for better impl.
             await _writer.WriteAsync(payload);
             var response = await _reader.ReadAsync();
             var buffer = response.Buffer;
-            var responseBytes = buffer.ToArray(); // can be avoided, it can ready it via segmets foreach without allocation, this allocates
+            var receivedMeta = !_corePayloadProcessor.ProcessPayload(buffer);
             // maybe loop if i don't have have full response
             _reader.AdvanceTo(buffer.End);
-            return responseBytes;
+            if (receivedMeta)
+            {
+                response = await _reader.ReadAsync();
+                buffer = response.Buffer;
+                if (!_corePayloadProcessor.ProcessPayload(buffer))
+                    throw new InvalidOperationException();
+                _reader.AdvanceTo(buffer.End);
+            }
         }
 
         public async Task SendWithoutResponseAsync(byte[] payload)

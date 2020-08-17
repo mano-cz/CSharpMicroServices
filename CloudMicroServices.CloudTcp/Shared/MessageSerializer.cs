@@ -8,9 +8,8 @@ namespace CloudMicroServices.CloudTcp.Shared
     {
         readonly EventSerializer _eventSerializer = new EventSerializer();
         readonly EventDeserializer _eventDeserializer = new EventDeserializer();
-        // protected readonly object _serializationLock = new object();
 
-        public (ByteBuffer metaData, ByteBuffer data) Serialize(object obj)
+        public (ByteBuffer Meta, ByteBuffer Data) Serialize(object obj)
         {
             lock (_eventSerializer)
             {
@@ -23,22 +22,22 @@ namespace CloudMicroServices.CloudTcp.Shared
             }
         }
 
-        public object Deserialize(byte[] data)
+        public object Deserialize(ReadOnlyMemory<byte> data)
         {
             var buffer = ByteBuffer.NewAsync(data);
-            // lock (_eventDeserializer)
-            // {
-            var result = _eventDeserializer.Deserialize(out var obj, buffer);
-            if (!result)
-                throw new InvalidOperationException();
-            return obj;
-            // }
+            lock (_eventDeserializer)
+            {
+                var result = _eventDeserializer.Deserialize(out var obj, buffer);
+                if (!result)
+                    throw new InvalidOperationException("Cannot deserialize data.");
+                return obj;
+            }
         }
 
         public void ApplyMetadataToDeserializer(ReadOnlyMemory<byte> metadata)
         {
             var buffer = ByteBuffer.NewAsync(metadata);
-            lock (_eventDeserializer) // maybe lock not needed
+            lock (_eventDeserializer)
             {
                 _eventDeserializer.ProcessMetadataLog(buffer);
             }
