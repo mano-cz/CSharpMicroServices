@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Buffers;
 using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using BTDB.Buffer;
+using CloudMicroServices.CloudTcp.Shared;
 
 namespace CloudMicroServices.CloudTcp.Core
 {
@@ -14,6 +15,7 @@ namespace CloudMicroServices.CloudTcp.Core
         NetworkStream _stream;
         PipeReader _reader;
         PipeWriter _writer;
+        readonly object _serializationLock = new object();
 
         public PeripheryTcpClient(CorePayloadProcessor corePayloadProcessor)
         {
@@ -37,10 +39,27 @@ namespace CloudMicroServices.CloudTcp.Core
                 await _stream.DisposeAsync();
         }
 
-        public async ValueTask SendAsync(byte[] payload)
+        public async ValueTask SendAsync(object obj)
         {
-            // todo read article for better impl.
-            await _writer.WriteAsync(payload);
+            ByteBuffer data;
+            lock (_serializationLock)
+            {
+                ByteBuffer meta;
+                (meta, data) = _corePayloadProcessor.PreparePayload(obj);
+                if (meta != default)
+                {
+                    var metaPayload = new PayloadBuilder()
+                        .SetMessageType(MessageType.Metadata)
+                        .SetMessageBuffer(meta)
+                        .Build();
+                    _writer.WriteAsync(metaPayload).AsTask().Wait();
+                }
+            }
+            var dataPayload = new PayloadBuilder()
+                .SetMessageType(MessageType.Query)
+                .SetMessageBuffer(data)
+                .Build();
+            await _writer.WriteAsync(dataPayload);
             var response = await _reader.ReadAsync();
             var buffer = response.Buffer;
             var receivedMeta = !_corePayloadProcessor.ProcessPayload(buffer);
@@ -54,11 +73,6 @@ namespace CloudMicroServices.CloudTcp.Core
                     throw new InvalidOperationException();
                 _reader.AdvanceTo(buffer.End);
             }
-        }
-
-        public async Task SendWithoutResponseAsync(byte[] payload)
-        {
-            await _writer.WriteAsync(payload);
         }
     }
 }

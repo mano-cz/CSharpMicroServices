@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using BTDB.Buffer;
 using CloudMicroServices.CloudTcp.Shared;
 
 namespace CloudMicroServices.CloudTcp.Core
@@ -27,6 +28,11 @@ namespace CloudMicroServices.CloudTcp.Core
                 default:
                     throw new InvalidOperationException($"Unsupported message type {payloadReader.MessageType}.");
             }
+        }
+
+        public (ByteBuffer Meta, ByteBuffer Data) PreparePayload(object data)
+        {
+            return _messageProcessor.SerializeData(data);
         }
     }
 }

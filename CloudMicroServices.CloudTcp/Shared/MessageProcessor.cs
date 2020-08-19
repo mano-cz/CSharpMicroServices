@@ -22,13 +22,18 @@ namespace CloudMicroServices.CloudTcp.Shared
         {
             var query = (Query1)_messageSerializer.Deserialize(queryBytes);
             var response = new Response1 { Data = $"{query.Data}Response" };
-            return _messageSerializer.Serialize(response);
+            return SerializeData(response);
         }
 
         public void ProcessResponse(ReadOnlyMemory<byte> responseBytes)
         {
             var response = (Response1)_messageSerializer.Deserialize(responseBytes);
             Console.WriteLine($"Response processed `{response.Data}`.");
+        }
+
+        public (ByteBuffer Meta, ByteBuffer Data) SerializeData(object data)
+        {
+            return _messageSerializer.Serialize(data);
         }
     }
 }
