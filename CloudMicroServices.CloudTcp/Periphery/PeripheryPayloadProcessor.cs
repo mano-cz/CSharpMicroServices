@@ -7,11 +7,11 @@ namespace CloudMicroServices.CloudTcp.Periphery
 {
     public class PeripheryPayloadProcessor
     {
-        readonly MessageProcessor _messageProcessor;
+        readonly MessageSerializer _messageSerializer;
 
-        public PeripheryPayloadProcessor(MessageProcessor messageProcessor)
+        public PeripheryPayloadProcessor(MessageSerializer messageSerializer)
         {
-            _messageProcessor = messageProcessor;
+            _messageSerializer = messageSerializer;
         }
 
         public (ByteBuffer Meta, ByteBuffer Data) ProcessPayload(ReadOnlySequence<byte> payloadSequence)
@@ -20,10 +20,12 @@ namespace CloudMicroServices.CloudTcp.Periphery
             switch (payloadReader.MessageType)
             {
                 case MessageType.Metadata:
-                    _messageProcessor.ProcessMetadata(payloadReader.MessageBody);
+                    _messageSerializer.ApplyMetadataToDeserializer(payloadReader.MessageBody);
                     break;
                 case MessageType.Query:
-                    return _messageProcessor.ProcessQuery(payloadReader.MessageBody);
+                    var query = (Query1)_messageSerializer.Deserialize(payloadReader.MessageBody);
+                    var response = new Response1 { Data = $"{query.Data}Response" };
+                    return _messageSerializer.Serialize(response);
                 default:
                     throw new InvalidOperationException($"Unsupported message type {payloadReader.MessageType}.");
             }

@@ -14,12 +14,13 @@ namespace CloudMicroServices.CloudTcp
         {
             var cancellationTokenSource = new CancellationTokenSource();
             StartPeriphery(cancellationTokenSource);
-            Parallel.For(1, 2, (i, state) =>
+            Parallel.For(1, 2, async (i, state) =>
             {
                 // socket allocation per query, should be pool, locking etc.
-                var peripheryClient = new PeripheryTcpClient(new CorePayloadProcessor(new MessageProcessor(new MessageSerializer())));
+                await using var peripheryClient = new PeripheryTcpClient(new CorePayloadProcessor(new MessageSerializer()));
                 peripheryClient.Connect(new IPEndPoint(IPAddress.Loopback, 8087));
-                peripheryClient.SendAsync(new Query1 { Data = "a" }).AsTask().Wait(cancellationTokenSource.Token);
+                var response = (Response1)peripheryClient.SendAsync(new Query1 { Data = "a" }).Result;
+                Console.WriteLine($"Response processed `{response.Data}`.");
             });
         }
 
@@ -30,7 +31,7 @@ namespace CloudMicroServices.CloudTcp
                 try
                 {
                     var peripheryTcpServer =
-                        new PeripheryTcpServer(new PeripheryPayloadProcessor(new MessageProcessor(new MessageSerializer())), cancellationTokenSource.Token);
+                        new PeripheryTcpServer(new PeripheryPayloadProcessor(new MessageSerializer()), cancellationTokenSource.Token);
                     peripheryTcpServer.ListenAsync(new IPEndPoint(IPAddress.Loopback, 8087))
                         .Wait(cancellationTokenSource.Token);
                 }

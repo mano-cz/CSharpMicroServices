@@ -32,14 +32,7 @@ namespace CloudMicroServices.CloudTcp.Core
             _writer = PipeWriter.Create(_stream);
         }
 
-        public async ValueTask DisposeAsync()
-        {
-            _clientSocket?.Dispose();
-            if (_stream != null)
-                await _stream.DisposeAsync();
-        }
-
-        public async ValueTask SendAsync(object obj)
+        public async ValueTask<object> SendAsync(object obj)
         {
             ByteBuffer data;
             lock (_serializationLock)
@@ -62,17 +55,26 @@ namespace CloudMicroServices.CloudTcp.Core
             await _writer.WriteAsync(dataPayload);
             var response = await _reader.ReadAsync();
             var buffer = response.Buffer;
-            var receivedMeta = !_corePayloadProcessor.ProcessPayload(buffer);
+            var responseObj = _corePayloadProcessor.ProcessPayload(buffer);
             // maybe loop if i don't have have full response
             _reader.AdvanceTo(buffer.End);
-            if (receivedMeta)
+            if (responseObj == default)
             {
                 response = await _reader.ReadAsync();
                 buffer = response.Buffer;
-                if (!_corePayloadProcessor.ProcessPayload(buffer))
+                responseObj = _corePayloadProcessor.ProcessPayload(buffer);
+                if (responseObj == default)
                     throw new InvalidOperationException();
                 _reader.AdvanceTo(buffer.End);
             }
+            return responseObj;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            _clientSocket?.Dispose();
+            if (_stream != null)
+                await _stream.DisposeAsync();
         }
     }
 }

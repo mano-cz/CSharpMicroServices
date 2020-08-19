@@ -7,24 +7,23 @@ namespace CloudMicroServices.CloudTcp.Core
 {
     public class CorePayloadProcessor
     {
-        readonly MessageProcessor _messageProcessor;
+        readonly MessageSerializer _messageSerializer;
 
-        public CorePayloadProcessor(MessageProcessor messageProcessor)
+        public CorePayloadProcessor(MessageSerializer messageSerializer)
         {
-            _messageProcessor = messageProcessor;
+            _messageSerializer = messageSerializer;
         }
 
-        public bool ProcessPayload(ReadOnlySequence<byte> payloadSequence)
+        public object ProcessPayload(ReadOnlySequence<byte> payloadSequence)
         {
             var payloadReader = new PayloadReader(payloadSequence);
             switch (payloadReader.MessageType)
             {
                 case MessageType.Metadata:
-                    _messageProcessor.ProcessMetadata(payloadReader.MessageBody);
-                    return false;
+                    _messageSerializer.ApplyMetadataToDeserializer(payloadReader.MessageBody);
+                    return default;
                 case MessageType.Response:
-                    _messageProcessor.ProcessResponse(payloadReader.MessageBody);
-                    return true;
+                    return _messageSerializer.Deserialize(payloadReader.MessageBody);
                 default:
                     throw new InvalidOperationException($"Unsupported message type {payloadReader.MessageType}.");
             }
@@ -32,7 +31,7 @@ namespace CloudMicroServices.CloudTcp.Core
 
         public (ByteBuffer Meta, ByteBuffer Data) PreparePayload(object data)
         {
-            return _messageProcessor.SerializeData(data);
+            return _messageSerializer.Serialize(data);
         }
     }
 }
