@@ -10,7 +10,7 @@ namespace CloudMicroServices.CloudTcp
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var cancellationTokenSource = new CancellationTokenSource();
             StartPeriphery(cancellationTokenSource);
@@ -22,6 +22,7 @@ namespace CloudMicroServices.CloudTcp
                 var response = (Response1)peripheryClient.SendAsync(new Query1 { Data = "a" }).Result;
                 Console.WriteLine($"Response processed `{response.Data}`.");
             });
+            cancellationTokenSource.Cancel();
         }
 
         static void StartPeriphery(CancellationTokenSource cancellationTokenSource)

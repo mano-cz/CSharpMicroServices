@@ -29,7 +29,7 @@ namespace CloudMicroServices.CloudTcp.Core
             }
         }
 
-        public (ByteBuffer Meta, ByteBuffer Data) PreparePayload(object data)
+        public (ByteBuffer Meta, ByteBuffer Data) SerializePayload(object data)
         {
             return _messageSerializer.Serialize(data);
         }

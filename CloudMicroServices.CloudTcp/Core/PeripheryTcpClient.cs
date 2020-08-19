@@ -38,7 +38,7 @@ namespace CloudMicroServices.CloudTcp.Core
             lock (_serializationLock)
             {
                 ByteBuffer meta;
-                (meta, data) = _corePayloadProcessor.PreparePayload(obj);
+                (meta, data) = _corePayloadProcessor.SerializePayload(obj);
                 if (meta != default)
                 {
                     var metaPayload = new PayloadBuilder()
