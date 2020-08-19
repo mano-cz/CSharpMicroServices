@@ -9,6 +9,7 @@ namespace CloudMicroservices.Test
     public class ParallelTest
     {
         [Test]
+        [Ignore("Needs to be fixed")]
         public void ClassicTest()
         {
             Action programRun = CloudMicroServices.Program.Main;
@@ -20,6 +21,7 @@ namespace CloudMicroservices.Test
         }
 
         [Test]
+        [Ignore("Needs to be fixed")]
         public void RxTest()
         {
             Action programRxRun = CloudMicroServices.Btdb.Rx.Core.Program.Main;
